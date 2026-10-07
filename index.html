@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kalender</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<meta name="theme-color" content="#F7F8FA">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F8FA;--sf:#fff;--ink:#17202B;--mu:#6B7685;--ln:#E6E9EE;--ac:#2F5BEA;--as:#EAF0FF;--c0:#4C7EF3;--c1:#E58A4B;--c2:#3FB58E;--c3:#9A8FD1}
+@media(prefers-color-scheme:dark){:root{--bg:#0F141B;--sf:#171E27;--ink:#E8EDF3;--mu:#8F9BAA;--ln:#263040;--ac:#7C9BFF;--as:#1E2A44}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.nav{position:fixed;z-index:5;bottom:0;left:0;right:0;display:flex;background:var(--sf);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
+.nv{flex:1;min-height:56px;color:var(--mu);font-size:12px;font-weight:500}.nv.on{color:var(--ac)}
+main{max-width:880px;margin:0 auto;padding:16px 16px 150px}
+.top input{width:100%}
+input,select,textarea{padding:10px 12px;min-height:44px;border:1px solid var(--ln);border-radius:10px;background:var(--bg);width:100%}
+input[type=checkbox]{width:20px;min-height:20px}
+h2{font-size:22px;font-weight:600;margin:0;letter-spacing:-.01em}h3{font-size:15px;margin:0 0 6px}.dh{margin:22px 0 2px;color:var(--mu);font-weight:500}
+.bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 6px}.bar div{display:flex;gap:4px}
+.ib{min-width:44px;min-height:44px;border-radius:12px;color:var(--mu);font-size:15px}.ib:hover{background:var(--as);color:var(--ac)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1px solid var(--ln);border-radius:16px;padding:6px 12px;font-size:13px;color:var(--mu);min-height:32px;background:var(--sf)}.chip.on{background:var(--as);color:var(--ac);border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.wd{text-align:center;color:var(--mu);font-size:12px;padding:4px 0}
+.cell{min-height:54px;border-radius:10px;background:var(--sf);border:1px solid var(--ln);padding:5px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;overflow:hidden;text-align:left}
+.cell.out{opacity:.45}.cell b{font-weight:500;min-width:22px;height:22px;line-height:22px;text-align:center;border-radius:11px;font-size:13px}
+.cell.today b{background:var(--ac);color:#fff}.cell.sel{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.dots{display:flex;gap:3px;padding-left:4px}.dots i{width:6px;height:6px;border-radius:3px}
+.cell em{display:none;font-style:normal;font-size:11px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sf);border:1px solid var(--ln);border-radius:12px;margin-top:8px}
+.bar1{width:4px;align-self:stretch;border-radius:2px;flex:none}
+.rb{flex:1;text-align:left;display:flex;flex-direction:column;min-width:0;min-height:40px;justify-content:center}.tm{font-size:12px;color:var(--mu)}
+.rb small{color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.src{font-size:11px;color:var(--mu);background:var(--bg);border-radius:8px;padding:2px 8px;flex:none}
+.ck{width:24px;height:24px;border-radius:8px;border:2px solid var(--mu);flex:none}.ck.d{background:var(--ac);border-color:var(--ac)}.strike{text-decoration:line-through;color:var(--mu)}
+.empty,.hint{color:var(--mu);margin:10px 0}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:16px;margin-top:14px;display:grid;gap:12px}
+.notes{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin-top:10px}
+.note{text-align:left;background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:14px}.note p{margin:6px 0 0;color:var(--mu);white-space:pre-wrap}
+label{display:grid;gap:4px;font-size:13px;color:var(--mu)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.inl{display:flex;gap:8px}
+label.chk{display:flex;align-items:center;gap:8px}
+.pri{background:var(--ac);color:#fff;border-radius:10px;padding:0 18px;min-height:44px;font-weight:600}
+.sec{border:1px solid var(--ln);border-radius:10px;padding:0 14px;min-height:44px;color:var(--ink)}.danger{color:#C93B3B;min-height:44px;padding:0 8px}
+.prow{display:grid;grid-template-columns:24px 1fr 1fr;gap:6px;align-items:center}.prow [data-f=title]{grid-column:2/4}.prow small{grid-column:2/4;color:var(--mu)}
+.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:28px;background:var(--ac);color:#fff;font-size:28px;z-index:6;box-shadow:0 8px 24px rgba(47,91,234,.3)}
+dialog{border:0;border-radius:20px;padding:20px;width:min(440px,calc(100% - 24px));background:var(--sf);color:var(--ink)}dialog::backdrop{background:rgba(10,15,25,.45)}
+#f{display:grid;gap:12px}.btns{display:flex;gap:8px}.btns span{flex:1}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:3px}.seg button{flex:1;min-height:38px;border-radius:9px;color:var(--mu)}.seg .on{background:var(--sf);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:9;max-width:90%}
+@media(min-width:760px){body{padding-left:190px}.nav{top:0;right:auto;width:190px;flex-direction:column;border-top:0;border-right:1px solid var(--ln);padding:28px 12px;gap:4px}
+.nv{flex:none;text-align:left;padding:0 14px;min-height:44px;border-radius:10px;font-size:15px}.nv.on{background:var(--as)}
+.cell{min-height:92px}.cell em{display:block}.dots{display:none}.fab{bottom:28px}#toast{bottom:30px}
+.prow{grid-template-columns:24px 1fr 140px 100px}.prow [data-f=title]{grid-column:auto}.prow small{grid-column:2/5}}
+</style></head><body>
+<nav class="nav"><button class="nv" data-v="month">Kalender</button><button class="nv" data-v="agenda">Agenda</button><button class="nv" data-v="tasks">Aufgaben</button><button class="nv" data-v="notes">Notizen</button><button class="nv" data-v="import">Import</button></nav>
+<main><div class="top"><input id="q" type="search" placeholder="Termine, Aufgaben und Notizen suchen" aria-label="Suchen"></div><div id="main"></div></main>
+<button class="fab" data-act="add" aria-label="Neu anlegen">+</button><div id="toast" hidden></div>
+<dialog id="dlg"><form id="f">
+<div class="seg" id="seg"><button type="button" data-ty="e">Termin</button><button type="button" data-ty="t">Aufgabe</button><button type="button" data-ty="n">Notiz</button></div>
+<label>Titel<input id="ft" required></label>
+<label data-for="e t">Datum<input type="date" id="fd"></label>
+<div class="two" data-for="e"><label>Beginn<input type="time" id="fs"></label><label>Ende<input type="time" id="fe"></label></div>
+<label class="chk" data-for="e"><input type="checkbox" id="fa"> Ganztägig</label>
+<label data-for="e">Ort<input id="fp"></label>
+<label data-for="e">Kategorie<select id="fc"><option value="0">Schule</option><option value="1">Sport</option><option value="2">Privat</option><option value="3">Sonstiges</option></select></label>
+<label data-for="t">Priorität<select id="fr"><option value="0">Hoch</option><option value="1">Normal</option><option value="2">Niedrig</option></select></label>
+<label>Notizen<textarea id="fn" rows="3"></textarea></label>
+<div class="btns"><button type="button" class="danger" id="del">Löschen</button><span></span><button type="button" class="sec" id="cx">Abbrechen</button><button class="pri">Speichern</button></div>
+</form></dialog>
+<script src="app.js"></script></body></html>
